@@ -52,10 +52,11 @@ class Monitor {
         }
     }
 
-    function runStream()
+    static function runStream($url = null)
     {
         $response = \Httpful\Request::post(SERVER_HOST_1 + SERVER_SHOW_PAGE)
-            ->body($this->stream)
+//            ->body($this->stream)
+            ->body($url)
             ->send();
         // TODO: if request is failed return error
     }
