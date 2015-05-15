@@ -10,21 +10,40 @@ require_once "Consts.php";
 
 class Monitor {
 
-    private $stream;
-    private $positionX;
-    private $positionY;
-    private $ip;
+    public $stream;
+    public $positionX;
+    public $positionY;
+    public $ip;
 
-    function __construct()
+    function __construct($id)
     {
-        $response = http_get(SERVICE_URL, null, $info);
-        $data = json_decode($response);
+        if (!empty($id)) {
+            // TODO: Create new Monitor in database
+        } else {
+            // Fetch monitor from DB
+            $response = http_get(SERVICE_URL_GET_MONITOR, array("id"=>$id), $info);
+            $data = json_decode($response);
 
-        $this->stream = $data["stream"];
-        $this->positionX = $data["positionX"];
-        $this->positionY = $data["positionY"];
-        $this->ip = $data["ip"];
+            // TODO: check id
+
+            $this->stream = $data["stream"];
+            $this->positionX = $data["positionX"];
+            $this->positionY = $data["positionY"];
+            $this->ip = $data["ip"];
+        }
     }
 
+
+    function setStream($stream)
+    {
+        if (!empty($stream)) {
+            $data = array(
+                "id"=>$this->id,
+                "stream"=>$stream,
+            );
+            http_post_data(SERVICE_URL_SET_MONITOR, $data, $info);
+
+        }
+    }
 
 }
