@@ -7,6 +7,7 @@
  */
 
 require_once "Consts.php";
+require_once "../vendor/autoload.php";
 
 class Monitor {
 
@@ -21,15 +22,17 @@ class Monitor {
             // TODO: Create new Monitor in database
         } else {
             // Fetch monitor from DB
-            $response = http_get(SERVICE_URL_GET_MONITOR, array("id"=>$id), $info);
-            $data = json_decode($response);
+            $payload = array("id" => $id);
+            $response = \Httpful\Request::get(SERVICE_URL_GET_MONITOR)
+                ->body(json_encode($payload))
+                ->send();
 
             // TODO: check id
 
-            $this->stream = $data["stream"];
-            $this->positionX = $data["positionX"];
-            $this->positionY = $data["positionY"];
-            $this->ip = $data["ip"];
+            $this->stream = $response->body->stream;
+            $this->positionX = $response->body->positionX;
+            $this->positionY = $response->body->positionY;
+            $this->ip = $response->body->ip;
         }
     }
 
@@ -41,9 +44,20 @@ class Monitor {
                 "id"=>$this->id,
                 "stream"=>$stream,
             );
-            http_post_data(SERVICE_URL_SET_MONITOR, $data, $info);
+            $response = \Httpful\Request::put(SERVICE_URL_SET_MONITOR)
+                ->body(json_encode($data))
+                ->send();
 
+            // TODO: if request is failed return error
         }
+    }
+
+    function runStream()
+    {
+        $response = \Httpful\Request::post(SERVER_HOST_1 + SERVER_SHOW_PAGE)
+            ->body($this->stream)
+            ->send();
+        // TODO: if request is failed return error
     }
 
 }
