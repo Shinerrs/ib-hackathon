@@ -14,26 +14,28 @@ class Monitor {
     public $stream;
     public $positionX;
     public $positionY;
-    public $ip;
+    public $host;
+    public $port;
 
     function __construct($id)
     {
-        if (!empty($id)) {
-            // TODO: Create new Monitor in database
-        } else {
-            // Fetch monitor from DB
-            $payload = array("id" => $id);
-            $response = \Httpful\Request::get(SERVICE_URL_GET_MONITOR)
-                ->body(json_encode($payload))
-                ->send();
-
-            // TODO: check id
-
-            $this->stream = $response->body->stream;
-            $this->positionX = $response->body->positionX;
-            $this->positionY = $response->body->positionY;
-            $this->ip = $response->body->ip;
-        }
+//        if (!empty($id)) {
+//            // TODO: Create new Monitor in database
+//        } else {
+//            // Fetch monitor from DB
+//            $payload = array("id" => $id);
+//            $response = \Httpful\Request::get(SERVICE_URL_GET_MONITOR)
+//                ->body(json_encode($payload))
+//                ->send();
+//
+//            // TODO: check id
+//
+//            $this->stream = $response->body->stream;
+//            $this->positionX = $response->body->positionX;
+//            $this->positionY = $response->body->positionY;
+//            $this->ip = $response->body->host;
+//            $this->port = $response->body->port;
+//        }
     }
 
 
@@ -49,14 +51,20 @@ class Monitor {
                 ->send();
 
             // TODO: if request is failed return error
+            $this->stream =$stream;
         }
     }
 
-    static function runStream($url = null)
+    function runStream($url = null, $monitorIp = null)
     {
-        $response = \Httpful\Request::post(SERVER_HOST_1 + SERVER_SHOW_PAGE)
-//            ->body($this->stream)
-            ->body($url)
+//        // If new stream is prompted save it to DB
+//        if ($this->stream != $url) {
+//            $this->setStream($url);
+//        }
+
+//        $response = \Httpful\Request::post('http://requestb.in/1ikp9yg1')
+        $response = \Httpful\Request::post("$monitorIp" . SERVER_SHOW_PAGE)
+            ->body("\"$url\"")
             ->send();
         // TODO: if request is failed return error
     }

@@ -1,5 +1,12 @@
 {
+  "repositories": [
+    {
+      "type": "pear",
+      "url": "pear.php.net"
+    }
+  ],
   "require": {
-    "nategood/httpful": "*"
+    "nategood/httpful": "*",
+    "pear-pear.php.net/config_lite": "*"
   }
 }
